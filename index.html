@@ -26,7 +26,15 @@
       padding: 12px;
       margin-bottom: 8px;
 
-          .safety {
+             .where {
+      font-size: 13px;
+      color: #1f7a4d;
+      background: #e7f4ec;
+      border-radius: 8px;
+      padding: 8px;
+      margin-top: 8px;
+      margin-bottom: 0;
+    } .safety {
       background: #f4efe4;
       border: 1px solid #e6dfd2;
       border-radius: 10px;
@@ -46,24 +54,24 @@
 
   <script>
         var items = [
-      { name: "PET bottle", stream: "Buy-back", steps: "Rinse it, crush it, keep it dry. Sold by the kilo.", searchWords: "bottle pet plastic eva evabottle coke fanta sprite mineral drink" },
-      { name: "HDPE container (keg, jerrycan)", stream: "Buy-back", steps: "Empty and rinse it. Remove the pump or cap. Do not mix with PET.", searchWords: "keg jerrycan gallon detergent shampoo container hard plastic" },
-      { name: "Pure water sachet", stream: "General bin", steps: "Drain it and collect in bulk. Buyers pay almost nothing for it. Never burn it.", searchWords: "pure water nylon rubber sachet poly bag film water bag rubber nylon" },
+      { name: "PET bottle", where: "Omo Mummy Scrap, Old Jebba Road, or Vicfold, Basin Area.", stream: "Buy-back", steps: "Rinse it, crush it, keep it dry. Sold by the kilo.", searchWords: "bottle pet plastic eva evabottle coke fanta sprite mineral drink" },
+      { name: "HDPE container (keg, jerrycan)", where: "Omo Mummy Scrap, Old Jebba Road, or Vicfold, Basin Area.", stream: "Buy-back", steps: "Empty and rinse it. Remove the pump or cap. Do not mix with PET.", searchWords: "keg jerrycan gallon detergent shampoo container hard plastic" },
+      { name: "Pure water sachet", where: "Vicfold, Basin Area — bulk amounts only, call first. No small-quantity buyer yet.", stream: "General bin", steps: "Drain it and collect in bulk. Buyers pay almost nothing for it. Never burn it.", searchWords: "pure water nylon rubber sachet poly bag film water bag rubber nylon" },
       { name: "Thin nylon bag", stream: "General bin", steps: "Reuse it first if it is clean. Never burn it.", searchWords: "nylon bag polythene shopping cellophane plastic bag rubber" },
-      { name: "Aluminium can", stream: "Buy-back", steps: "Empty and rinse it. Crush it. Highest value per kilo of the common materials.", searchWords: "can aluminium malt coke drink tin mineral" },
-      { name: "Metal tin or scrap", stream: "Buy-back", steps: "Rinse out food. Bend sharp edges inward. Scrap metal always has a buyer.", searchWords: "tin milk tomato iron scrap metal panel" },
-      { name: "Copper or aluminium wire", stream: "Buy-back", steps: "Strip it and sell by the kilo. Check the scale — short-changing is common.", searchWords: "copper wire aluminium wire cable scrap iron" },
-      { name: "Glass bottle or jar", stream: "Reuse", steps: "Return it to the shop or a zobo seller. Reuse beats recycling here.", searchWords: "glass bottle jar beer wine koko" },
-      { name: "Returnable bottle (crate deposit)", stream: "Reuse", steps: "Take it back to the distributor and collect your crate deposit. Small money, but it works.", searchWords: "returnable bottle crate deposit distributor fanta coke" },
-      { name: "Clean sachet nylon in bulk", stream: "Reuse", steps: "Collected clean and dry, this can go to a mat weaver or sachet recycler instead of the bin.", searchWords: "pure water sachet nylon rubber bulk mat weaver craft" },
-      { name: "Cardboard or carton", stream: "Buy-back", steps: "Flatten it and keep it dry. Wet or greasy cardboard loses its value.", searchWords: "carton cardboard box package" },
-      { name: "Paper", stream: "Buy-back", steps: "Keep it dry and flat. Food-stained paper cannot be recycled.", searchWords: "paper newspaper book exercise office paper" },
-      { name: "Food waste or peelings", stream: "Organic", steps: "Separate it from all packaging. Drain the liquid. Compost it if you have space.", searchWords: "food eba rice beans peel banana orange leftover organic compost" },
-      { name: "Small electronics", stream: "Special", steps: "Remove the battery if you can. Take it to an e-waste drop-off. Never the bin.", searchWords: "phone charger cable electronics ewaste radio tv laptop" },
-      { name: "Battery", stream: "Special", steps: "Tape the ends. Keep it separate. Take it to an e-waste or battery point.", searchWords: "battery aa powerbank torch phone battery" },
-      { name: "Clothing or textile", stream: "Reuse", steps: "Wash and dry before donating. Only unwearable cloth goes to a textile buyer.", searchWords: "cloth clothes textile shirt fabric okrika wear" },
-      { name: "Syringe, blade or medical waste", stream: "Special", steps: "Do not touch it bare-handed. Use a sealed container. Take it to a clinic.", searchWords: "syringe needle blade medical sharp bandage sanitary" },
-      { name: "Tyre or rubber", stream: "Special", steps: "Take it to a vulcanizer. Never burn a tyre — the smoke is poisonous.", searchWords: "tyre tire rubber motor vulcanizer" }
+      { name: "Aluminium can", where: "Omo Mummy Scrap, Old Jebba Road. Vicfold also takes cans.", stream: "Buy-back", steps: "Empty and rinse it. Crush it. Highest value per kilo of the common materials.", searchWords: "can aluminium malt coke drink tin mineral" },
+      { name: "Metal tin or scrap", where: "Omo Mummy Scrap, Old Jebba Road.", stream: "Buy-back", steps: "Rinse out food. Bend sharp edges inward. Scrap metal always has a buyer.", searchWords: "tin milk tomato iron scrap metal panel" },
+      { name: "Copper or aluminium wire", where: "Scrap yards on Old Jebba Road. Ask for the price by grade.", stream: "Buy-back", steps: "Strip it and sell by the kilo. Check the scale — short-changing is common.", searchWords: "copper wire aluminium wire cable scrap iron" },
+      { name: "Glass bottle or jar", where: "Return it to the shop, or sell it to a zobo seller.", stream: "Reuse", steps: "Return it to the shop or a zobo seller. Reuse beats recycling here.", searchWords: "glass bottle jar beer wine koko" },
+      { name: "Returnable bottle (crate deposit)", where: "Back to the distributor or shop — collect your crate deposit.", stream: "Reuse", steps: "Take it back to the distributor and collect your crate deposit. Small money, but it works.", searchWords: "returnable bottle crate deposit distributor fanta coke" },
+      { name: "Clean sachet nylon in bulk", where: "Vicfold, Basin Area — bulk only, call first.", stream: "Reuse", steps: "Collected clean and dry, this can go to a mat weaver or sachet recycler instead of the bin.", searchWords: "pure water sachet nylon rubber bulk mat weaver craft" },
+      { name: "Cardboard or carton", where: "Omo Mummy Scrap, Old Jebba Road — ask first.", stream: "Buy-back", steps: "Flatten it and keep it dry. Wet or greasy cardboard loses its value.", searchWords: "carton cardboard box package" },
+      { name: "Paper", where: "Omo Mummy Scrap, Old Jebba Road — ask first.", stream: "Buy-back", steps: "Keep it dry and flat. Food-stained paper cannot be recycled.", searchWords: "paper newspaper book exercise office paper" },
+      { name: "Food waste or peelings", where: "No collection exists. Compost it at home, or bury it.", stream: "Organic", steps: "Separate it from all packaging. Drain the liquid. Compost it if you have space.", searchWords: "food eba rice beans peel banana orange leftover organic compost" },
+      { name: "Small electronics", where: "No verified e-waste drop-off in Ilorin yet. Keep it out of the bin.", stream: "Special", steps: "Remove the battery if you can. Take it to an e-waste drop-off. Never the bin.", searchWords: "phone charger cable electronics ewaste radio tv laptop" },
+      { name: "Battery", where: "No verified e-waste drop-off in Ilorin yet. Keep it out of the bin.", stream: "Special", steps: "Tape the ends. Keep it separate. Take it to an e-waste or battery point.", searchWords: "battery aa powerbank torch phone battery" },
+      { name: "Clothing or textile", where: "Donate it, or sell to okrika buyers at the market.", stream: "Reuse", steps: "Wash and dry before donating. Only unwearable cloth goes to a textile buyer.", searchWords: "cloth clothes textile shirt fabric okrika wear" },
+      { name: "Syringe, blade or medical waste", where: "Take it to a clinic or hospital.", stream: "Special", steps: "Do not touch it bare-handed. Use a sealed container. Take it to a clinic.", searchWords: "syringe needle blade medical sharp bandage sanitary" },
+      { name: "Tyre or rubber", where: "Take it to a vulcanizer.", stream: "Special", steps: "Take it to a vulcanizer. Never burn a tyre — the smoke is poisonous.", searchWords: "tyre tire rubber motor vulcanizer" }
     ];
     var list = document.getElementById("list");
     var q = document.getElementById("q");
@@ -80,6 +88,7 @@
               '<h2>' + item.name + '</h2>' +
               '<p>' + item.stream + '</p>' +
               '<p>' + item.steps + '</p>' +
+                            (item.where ? '<p class="where">Where to take it: ' + item.where + '</p>' : '') +
             '</div>';
         }
       }
@@ -96,6 +105,9 @@
     <strong>If you're not sure:</strong> put it in the general waste bin.
     Do not guess the recycling bag — one wrong item can spoil a whole bale.
     Batteries, phones and syringes should never go in general waste.
+        <br><br>
+    <strong>About the buy-back points:</strong> these come from public listings checked on
+    20 October 2026. None has been visited yet and no price is confirmed. Call before you travel.
   </div>
 </body>
 </html>
