@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Where does this go?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e8f5e9;
+      padding: 20px;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 26px;
+    }
+    .card {
+      background: white;
+      border: 1px solid #e6dfd2;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Where does this go?</h1>
+  <p>My first page, by me.</p>
+  <input id="q" placeholder="Try: bottle, nylon, battery">
+  <div id="list"></div>
+
+  <script>
+    var items = [
+      { name: "PET bottle", stream: "Buy-back", steps: "Rinse it, crush it, keep it dry." },
+      { name: "Pure water sachet", stream: "General bin", steps: "Drain it, collect in bulk, never burn it." },
+      { name: "Carton", stream: "Buy-back", steps: "Flatten it and keep it dry." },
+      { name: "Battery", stream: "Special", steps: "Tape the ends and take it to an e-waste point." },
+      { name: "Food waste", stream: "Organic", steps: "Keep it separate from packaging." },
+      { name: "Aluminium can", stream: "Buy-back", steps: "Rinse it, crush it, keep it with other metals." },
+      { name: "Old phone", stream: "Special", steps: "Wipe your data and take it to an e-waste point." },
+      { name: "Glass bottle", stream: "Buy-back", steps: "Rinse it, remove the cap, don't break it." }
+    ];
+
+    var list = document.getElementById("list");
+    var q = document.getElementById("q");
+
+    function show(term) {
+      list.innerHTML = "";
+      for (var i = 0; i < items.length; i = i + 1) {
+        var item = items[i];
+        var text = (item.name + " " + item.stream + " " + item.steps).toLowerCase();
+        if (text.indexOf(term) > -1) {
+          list.innerHTML +=
+            '<div class="card">' +
+              '<h2>' + item.name + '</h2>' +
+              '<p>' + item.stream + '</p>' +
+              '<p>' + item.steps + '</p>' +
+            '</div>';
+        }
+      }
+    }
+
+    q.addEventListener("input", function () {
+      show(q.value.toLowerCase());
+    });
+
+    show("");
+
+  </script>
+
+</body>
+</html>
