@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Where does this go?</title>
   <style>
+        .sub {
+      color: #6b665e;
+      margin-top: 0;
+    }
     body {
       font-family: Arial, sans-serif;
       background: #e8f5e9;
@@ -21,13 +25,22 @@
       border-radius: 10px;
       padding: 12px;
       margin-bottom: 8px;
+      
+          .safety {
+      background: #f4efe4;
+      border: 1px solid #e6dfd2;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 14px;
+      margin-top: 24px;
+    }
     }
   </style>
 </head>
 <body>
 
   <h1>Where does this go?</h1>
-  <p>My first page, by me.</p>
+  <p class="sub">Search an item and find out which stream it belongs to.</p>
   <input id="q" placeholder="Try: bottle, nylon, battery">
   <div id="list"></div>
 
@@ -69,6 +82,10 @@
     show("");
 
   </script>
-
+  <div class="safety">
+    <strong>If you're not sure:</strong> put it in the general waste bin.
+    Do not guess the recycling bag — one wrong item can spoil a whole bale.
+    Batteries, phones and syringes should never go in general waste.
+  </div>
 </body>
 </html>
