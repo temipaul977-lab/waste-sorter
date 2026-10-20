@@ -1,17 +1,17 @@
 <!DOCTYPE html>
+<!--
+  THIS IS WHAT YOUR FILE SHOULD LOOK LIKE AFTER STEP 14.
+  Open this in Chrome to see the target. Compare it to yours if you get lost.
+-->
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Where does this go?</title>
   <style>
-        .sub {
-      color: #6b665e;
-      margin-top: 0;
-    }
     body {
       font-family: Arial, sans-serif;
-      background: #e8f5e9;
+      background: #fbf8f2;
       padding: 20px;
       max-width: 560px;
       margin: 0 auto;
@@ -19,14 +19,44 @@
     h1 {
       font-size: 26px;
     }
+    .sub {
+      color: #6b665e;
+      margin-top: 0;
+    }
+    #q {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: 1px solid #e6dfd2;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
     .card {
       background: white;
       border: 1px solid #e6dfd2;
       border-radius: 10px;
       padding: 12px;
       margin-bottom: 8px;
-
-             .where {
+    }
+    .card h2 {
+      font-size: 17px;
+      margin: 0 0 6px;
+    }
+    .card p {
+      margin: 0 0 6px;
+      font-size: 14px;
+      color: #4a453d;
+    }
+    .pill {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 4px 9px;
+      border-radius: 20px;
+      background: #e7f4ec;
+      color: #1f7a4d;
+    }
+    .where {
       font-size: 13px;
       color: #1f7a4d;
       background: #e7f4ec;
@@ -34,7 +64,45 @@
       padding: 8px;
       margin-top: 8px;
       margin-bottom: 0;
-    } .safety {
+    }
+    .camera {
+      background: white;
+      border: 1px solid #e6dfd2;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .camBtn {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      font-family: inherit;
+      color: white;
+      background: #1f7a4d;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .camBtn:disabled { background: #9aa8a0; }
+    #cam {
+      width: 100%;
+      border-radius: 10px;
+      background: #000;
+      display: block;
+    }
+    .camStatus {
+      font-size: 13px;
+      color: #6b665e;
+      margin: 8px 0 0;
+      text-align: center;
+    }
+    .camHint {
+      font-size: 13px;
+      color: #6b665e;
+      margin: 0;
+    }
+    .safety {
       background: #f4efe4;
       border: 1px solid #e6dfd2;
       border-radius: 10px;
@@ -42,30 +110,51 @@
       font-size: 14px;
       margin-top: 24px;
     }
-    }
   </style>
 </head>
 <body>
 
   <h1>Where does this go?</h1>
   <p class="sub">Search an item and find out which stream it belongs to.</p>
-  <input id="q" placeholder="Try: bottle, nylon, battery">
+
+  <div class="camera">
+    <p class="camHint" style="margin-bottom:10px">Hold one item in front of the camera.</p>
+    <button id="camBtn" class="camBtn">Use the camera</button>
+    <div id="camBox" hidden>
+      <video id="cam" autoplay playsinline muted></video>
+      <p id="camStatus" class="camStatus">Starting…</p>
+    </div>
+    <div id="camResult"></div>
+  </div>
+
+  <input id="q" placeholder="Try: rubber, bottle, battery">
+
   <div id="list"></div>
 
+  <div class="safety">
+    <strong>If you're not sure:</strong> put it in the general waste bin.
+    Do not guess the recycling bag — one wrong item can spoil a whole bale.
+    Batteries, phones and syringes should never go in general waste.
+    <br><br>
+    <strong>About the buy-back points:</strong> these come from public listings checked on
+    20 October 2026. None has been visited yet and no price is confirmed. Call before you travel.
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
   <script>
-        var items = [
-      { name: "PET bottle", where: "Omo Mummy Scrap, Old Jebba Road, or Vicfold, Basin Area.", stream: "Buy-back", steps: "Rinse it, crush it, keep it dry. Sold by the kilo.", searchWords: "bottle pet plastic eva evabottle coke fanta sprite mineral drink" },
+    var items = [
+      { name: "PET bottle", model: "pet_bottle", where: "Omo Mummy Scrap, Old Jebba Road, or Vicfold, Basin Area.", stream: "Buy-back", steps: "Rinse it, crush it, keep it dry. Sold by the kilo.", searchWords: "bottle pet plastic eva evabottle coke fanta sprite mineral drink" },
       { name: "HDPE container (keg, jerrycan)", where: "Omo Mummy Scrap, Old Jebba Road, or Vicfold, Basin Area.", stream: "Buy-back", steps: "Empty and rinse it. Remove the pump or cap. Do not mix with PET.", searchWords: "keg jerrycan gallon detergent shampoo container hard plastic" },
-      { name: "Pure water sachet", where: "Vicfold, Basin Area — bulk amounts only, call first. No small-quantity buyer yet.", stream: "General bin", steps: "Drain it and collect in bulk. Buyers pay almost nothing for it. Never burn it.", searchWords: "pure water nylon rubber sachet poly bag film water bag rubber nylon" },
-      { name: "Thin nylon bag", stream: "General bin", steps: "Reuse it first if it is clean. Never burn it.", searchWords: "nylon bag polythene shopping cellophane plastic bag rubber" },
-      { name: "Aluminium can", where: "Omo Mummy Scrap, Old Jebba Road. Vicfold also takes cans.", stream: "Buy-back", steps: "Empty and rinse it. Crush it. Highest value per kilo of the common materials.", searchWords: "can aluminium malt coke drink tin mineral" },
+      { name: "Pure water sachet", model: "sachet", where: "Vicfold, Basin Area \u2014 bulk amounts only, call first. No small-quantity buyer yet.", stream: "General bin", steps: "Drain it and collect in bulk. Buyers pay almost nothing for it. Never burn it.", searchWords: "pure water nylon rubber sachet poly bag film water bag rubber nylon" },
+      { name: "Thin nylon bag", model: "nylon_bag", stream: "General bin", steps: "Reuse it first if it is clean. Never burn it.", searchWords: "nylon bag polythene shopping cellophane plastic bag rubber" },
+      { name: "Aluminium can", model: "can", where: "Omo Mummy Scrap, Old Jebba Road. Vicfold also takes cans.", stream: "Buy-back", steps: "Empty and rinse it. Crush it. Highest value per kilo of the common materials.", searchWords: "can aluminium malt coke drink tin mineral" },
       { name: "Metal tin or scrap", where: "Omo Mummy Scrap, Old Jebba Road.", stream: "Buy-back", steps: "Rinse out food. Bend sharp edges inward. Scrap metal always has a buyer.", searchWords: "tin milk tomato iron scrap metal panel" },
       { name: "Copper or aluminium wire", where: "Scrap yards on Old Jebba Road. Ask for the price by grade.", stream: "Buy-back", steps: "Strip it and sell by the kilo. Check the scale — short-changing is common.", searchWords: "copper wire aluminium wire cable scrap iron" },
       { name: "Glass bottle or jar", where: "Return it to the shop, or sell it to a zobo seller.", stream: "Reuse", steps: "Return it to the shop or a zobo seller. Reuse beats recycling here.", searchWords: "glass bottle jar beer wine koko" },
-      { name: "Returnable bottle (crate deposit)", where: "Back to the distributor or shop — collect your crate deposit.", stream: "Reuse", steps: "Take it back to the distributor and collect your crate deposit. Small money, but it works.", searchWords: "returnable bottle crate deposit distributor fanta coke" },
-      { name: "Clean sachet nylon in bulk", where: "Vicfold, Basin Area — bulk only, call first.", stream: "Reuse", steps: "Collected clean and dry, this can go to a mat weaver or sachet recycler instead of the bin.", searchWords: "pure water sachet nylon rubber bulk mat weaver craft" },
-      { name: "Cardboard or carton", where: "Omo Mummy Scrap, Old Jebba Road — ask first.", stream: "Buy-back", steps: "Flatten it and keep it dry. Wet or greasy cardboard loses its value.", searchWords: "carton cardboard box package" },
-      { name: "Paper", where: "Omo Mummy Scrap, Old Jebba Road — ask first.", stream: "Buy-back", steps: "Keep it dry and flat. Food-stained paper cannot be recycled.", searchWords: "paper newspaper book exercise office paper" },
+      { name: "Returnable bottle (crate deposit)", where: "Back to the distributor or shop \u2014 collect your crate deposit.", stream: "Reuse", steps: "Take it back to the distributor and collect your crate deposit. Small money, but it works.", searchWords: "returnable bottle crate deposit distributor fanta coke" },
+      { name: "Clean sachet nylon in bulk", where: "Vicfold, Basin Area \u2014 bulk only, call first.", stream: "Reuse", steps: "Collected clean and dry, this can go to a mat weaver or sachet recycler instead of the bin.", searchWords: "pure water sachet nylon rubber bulk mat weaver craft" },
+      { name: "Cardboard or carton", model: "cardboard", where: "Omo Mummy Scrap, Old Jebba Road \u2014 ask first.", stream: "Buy-back", steps: "Flatten it and keep it dry. Wet or greasy cardboard loses its value.", searchWords: "carton cardboard box package" },
+      { name: "Paper", where: "Omo Mummy Scrap, Old Jebba Road \u2014 ask first.", stream: "Buy-back", steps: "Keep it dry and flat. Food-stained paper cannot be recycled.", searchWords: "paper newspaper book exercise office paper" },
       { name: "Food waste or peelings", where: "No collection exists. Compost it at home, or bury it.", stream: "Organic", steps: "Separate it from all packaging. Drain the liquid. Compost it if you have space.", searchWords: "food eba rice beans peel banana orange leftover organic compost" },
       { name: "Small electronics", where: "No verified e-waste drop-off in Ilorin yet. Keep it out of the bin.", stream: "Special", steps: "Remove the battery if you can. Take it to an e-waste drop-off. Never the bin.", searchWords: "phone charger cable electronics ewaste radio tv laptop" },
       { name: "Battery", where: "No verified e-waste drop-off in Ilorin yet. Keep it out of the bin.", stream: "Special", steps: "Tape the ends. Keep it separate. Take it to an e-waste or battery point.", searchWords: "battery aa powerbank torch phone battery" },
@@ -73,6 +162,7 @@
       { name: "Syringe, blade or medical waste", where: "Take it to a clinic or hospital.", stream: "Special", steps: "Do not touch it bare-handed. Use a sealed container. Take it to a clinic.", searchWords: "syringe needle blade medical sharp bandage sanitary" },
       { name: "Tyre or rubber", where: "Take it to a vulcanizer.", stream: "Special", steps: "Take it to a vulcanizer. Never burn a tyre — the smoke is poisonous.", searchWords: "tyre tire rubber motor vulcanizer" }
     ];
+
     var list = document.getElementById("list");
     var q = document.getElementById("q");
 
@@ -80,17 +170,19 @@
       list.innerHTML = "";
       for (var i = 0; i < items.length; i = i + 1) {
         var item = items[i];
-        var text = (item.name + " " + item.stream + " " + item.steps).toLowerCase();
-                var searchable = (item.name + " " + item.searchWords).toLowerCase();
+        var searchable = (item.name + " " + item.searchWords).toLowerCase();
         if (searchable.indexOf(term) > -1) {
           list.innerHTML +=
             '<div class="card">' +
               '<h2>' + item.name + '</h2>' +
-              '<p>' + item.stream + '</p>' +
+              '<span class="pill">' + item.stream + '</span>' +
               '<p>' + item.steps + '</p>' +
-                            (item.where ? '<p class="where">Where to take it: ' + item.where + '</p>' : '') +
+              (item.where ? '<p class="where">Where to take it: ' + item.where + '</p>' : '') +
             '</div>';
         }
+      }
+      if (list.innerHTML === "") {
+        list.innerHTML = '<p>No match. Try a simpler word like "bottle" or "rubber".</p>';
       }
     }
 
@@ -100,14 +192,109 @@
 
     show("");
 
+    // ---------- camera ----------
+    var MODEL_URL = "https://teachablemachine.withgoogle.com/models/omaiU3J_6/";
+    var model = null;
+    var camRunning = false;
+
+    var camBtn = document.getElementById("camBtn");
+    var camBox = document.getElementById("camBox");
+    var camStatus = document.getElementById("camStatus");
+    var camResult = document.getElementById("camResult");
+    var videoEl = document.getElementById("cam");
+
+    function findByModelClass(cls) {
+      for (var i = 0; i < items.length; i = i + 1) {
+        if (items[i].model === cls) { return items[i]; }
+      }
+      return null;
+    }
+
+    function drawCard(item, target) {
+      target.innerHTML =
+        '<div class="card">' +
+          '<h2>' + item.name + '</h2>' +
+          '<span class="pill">' + item.stream + '</span>' +
+          '<p>' + item.steps + '</p>' +
+          (item.where ? '<p class="where">Where to take it: ' + item.where + '</p>' : '') +
+        '</div>';
+    }
+
+    function drawNotSure(target, label, confidence) {
+      target.innerHTML =
+        '<div class="card">' +
+          '<h2>Not sure yet</h2>' +
+          '<p>The camera thinks this is <strong>' + label + '</strong> but only at ' +
+             Math.round(confidence * 100) + '% confidence.</p>' +
+          '<p>Move closer, get more light on the item, and hold just one thing in frame. ' +
+             'If it is still unclear, search for it below, or use the general waste bin.</p>' +
+        '</div>';
+    }
+
+    camBtn.addEventListener("click", async function () {
+      camBtn.disabled = true;
+      camBtn.textContent = "Loading camera\u2026";
+      try {
+        if (MODEL_URL.indexOf("PASTE") === 0) {
+          throw new Error("Model URL not set");
+        }
+        if (!model) {
+          model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
+        }
+        var stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+          audio: false
+        });
+        videoEl.srcObject = stream;
+        camBox.hidden = false;
+        camBtn.hidden = true;
+        camStatus.textContent = "Point at one item\u2026";
+        camRunning = true;
+        scanLoop();
+      } catch (err) {
+        camBtn.disabled = false;
+        camBtn.textContent = "Use the camera";
+        camStatus.textContent = "";
+        camResult.innerHTML =
+          '<div class="card"><h2>Camera did not start</h2>' +
+          '<p>' + (err && err.message ? err.message : "Unknown error") + '</p>' +
+          '<p>Allow camera permission in your browser, make sure the page is on https://, ' +
+          'then try again. You can still search for the item below.</p></div>';
+        camResult.hidden = false;
+      }
+    });
+
+    async function scanLoop() {
+      if (!camRunning) { return; }
+      if (videoEl.readyState < 2) {
+        setTimeout(scanLoop, 300);
+        return;
+      }
+      var preds = await model.predict(videoEl);
+      var top = preds[0];
+      for (var i = 1; i < preds.length; i = i + 1) {
+        if (preds[i].probability > top.probability) { top = preds[i]; }
+      }
+      var conf = top.probability;
+      var cls = top.className;
+
+      camStatus.textContent = "Seeing: " + cls + " (" + Math.round(conf * 100) + "%)";
+
+      if (cls === "other") {
+        camResult.innerHTML =
+          '<div class="card"><h2>That does not look like waste</h2>' +
+          '<p>If it is an item you want to throw away, hold it alone in the middle of the frame.</p></div>';
+      } else if (conf < 0.6) {
+        drawNotSure(camResult, cls, conf);
+      } else {
+        var item = findByModelClass(cls);
+        if (item) { drawCard(item, camResult); }
+        else { drawNotSure(camResult, cls, conf); }
+      }
+
+      setTimeout(scanLoop, 700);
+    }
   </script>
-  <div class="safety">
-    <strong>If you're not sure:</strong> put it in the general waste bin.
-    Do not guess the recycling bag — one wrong item can spoil a whole bale.
-    Batteries, phones and syringes should never go in general waste.
-        <br><br>
-    <strong>About the buy-back points:</strong> these come from public listings checked on
-    20 October 2026. None has been visited yet and no price is confirmed. Call before you travel.
-  </div>
-</body>
+
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4da9c983f2def92',t:'MTc5MjUyNjQ1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
