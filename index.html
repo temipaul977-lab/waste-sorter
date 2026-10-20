@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--
-  THIS IS WHAT YOUR FILE SHOULD LOOK LIKE AFTER STEP 14.
-  Open this in Chrome to see the target. Compare it to yours if you get lost.
--->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -231,12 +227,57 @@
         '</div>';
     }
 
+    // The AI library is loaded from a CDN by a <script> tag. On some phones that
+    // silently fails, so we check for it and try a second CDN before giving up.
+    async function ensureLibrary() {
+      if (typeof tmImage !== "undefined") { return; }
+      var urls = [
+        "https://unpkg.com/@teachablemachine/image@0.8.5/dist/teachablemachine-image.min.js",
+        "https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.5/dist/teachablemachine-image.min.js"
+      ];
+      for (var i = 0; i < urls.length; i = i + 1) {
+        camStatus.textContent = "Downloading the AI library\u2026";
+        await new Promise(function (done) {
+          var el = document.createElement("script");
+          el.src = urls[i];
+          el.onload = done;
+          el.onerror = done;
+          document.head.appendChild(el);
+        });
+        if (typeof tmImage !== "undefined") { return; }
+      }
+      throw new Error("The AI library could not be downloaded. Your connection blocked it. " +
+                      "Try again on mobile data, or turn off data-saver mode.");
+    }
+
     camBtn.addEventListener("click", async function () {
       camBtn.disabled = true;
       camBtn.textContent = "Loading camera\u2026";
+      camResult.innerHTML = "";
+
+      var diag =
+        "URL: " + MODEL_URL +
+        " | tmImage: " + (typeof tmImage) +
+        " | https: " + (window.isSecureContext ? "yes" : "no") +
+        " | mediaDevices: " + (navigator.mediaDevices ? "yes" : "no");
+      console.log("DIAGNOSTIC -> " + diag);
+
       try {
         if (MODEL_URL.indexOf("PASTE") === 0) {
-          throw new Error("Model URL not set");
+          throw new Error("The model link has not been pasted in yet. Line 196 needs your Teachable Machine link.");
+        }
+        await ensureLibrary();
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error("This browser is blocking camera access. Open the site in Chrome, on an https:// address.");
+        }
+
+        var mj = await fetch(MODEL_URL + "model.json");
+        if (!mj.ok) {
+          throw new Error("model.json returned " + mj.status + ". Check the model link is exactly right and ends with a slash.");
+        }
+        var mt = await fetch(MODEL_URL + "metadata.json");
+        if (!mt.ok) {
+          throw new Error("metadata.json returned " + mt.status + ". The model may not have finished uploading to Teachable Machine.");
         }
         if (!model) {
           model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
@@ -257,9 +298,9 @@
         camStatus.textContent = "";
         camResult.innerHTML =
           '<div class="card"><h2>Camera did not start</h2>' +
-          '<p>' + (err && err.message ? err.message : "Unknown error") + '</p>' +
-          '<p>Allow camera permission in your browser, make sure the page is on https://, ' +
-          'then try again. You can still search for the item below.</p></div>';
+          '<p><strong>' + (err && err.message ? err.message : String(err)) + '</strong></p>' +
+          '<p style="font-size:12px;color:#6b665e;word-break:break-all">' + diag + '</p>' +
+          '<p>You can still search for the item below.</p></div>';
         camResult.hidden = false;
       }
     });
@@ -296,5 +337,5 @@
     }
   </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4da9c983f2def92',t:'MTc5MjUyNjQ1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
