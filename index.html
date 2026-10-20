@@ -135,8 +135,9 @@
     <strong>About the buy-back points:</strong> these come from public listings checked on
     20 October 2026. None has been visited yet and no price is confirmed. Call before you travel.
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+  
+  <script src="tf.min.js"></script>
+  <script src="tm-image.min.js"></script>
   <script>
     var items = [
       { name: "PET bottle", model: "pet_bottle", where: "Omo Mummy Scrap, Old Jebba Road, or Vicfold, Basin Area.", stream: "Buy-back", steps: "Rinse it, crush it, keep it dry. Sold by the kilo.", searchWords: "bottle pet plastic eva evabottle coke fanta sprite mineral drink" },
@@ -188,8 +189,7 @@
 
     show("");
 
-    // ---------- camera ----------
-    var MODEL_URL = "https://teachablemachine.withgoogle.com/models/omaiU3J_6/";
+    var MODEL_URL = "./";
     var model = null;
     var camRunning = false;
 
@@ -226,28 +226,14 @@
              'If it is still unclear, search for it below, or use the general waste bin.</p>' +
         '</div>';
     }
-
-    // The AI library is loaded from a CDN by a <script> tag. On some phones that
-    // silently fails, so we check for it and try a second CDN before giving up.
-    async function ensureLibrary() {
-      if (typeof tmImage !== "undefined") { return; }
-      var urls = [
-        "https://unpkg.com/@teachablemachine/image@0.8.5/dist/teachablemachine-image.min.js",
-        "https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.5/dist/teachablemachine-image.min.js"
-      ];
-      for (var i = 0; i < urls.length; i = i + 1) {
-        camStatus.textContent = "Downloading the AI library\u2026";
-        await new Promise(function (done) {
-          var el = document.createElement("script");
-          el.src = urls[i];
-          el.onload = done;
-          el.onerror = done;
-          document.head.appendChild(el);
-        });
-        if (typeof tmImage !== "undefined") { return; }
+    
+    function ensureLibrary() {
+      if (typeof tf === "undefined") {
+        throw new Error("tf.min.js did not load. Check the file is in the repo next to index.html, spelled exactly tf.min.js.");
       }
-      throw new Error("The AI library could not be downloaded. Your connection blocked it. " +
-                      "Try again on mobile data, or turn off data-saver mode.");
+      if (typeof tmImage === "undefined") {
+        throw new Error("tm-image.min.js did not load. Check the file is in the repo next to index.html, spelled exactly tm-image.min.js.");
+      }
     }
 
     camBtn.addEventListener("click", async function () {
@@ -257,27 +243,25 @@
 
       var diag =
         "URL: " + MODEL_URL +
+        " | tf: " + (typeof tf) +
         " | tmImage: " + (typeof tmImage) +
         " | https: " + (window.isSecureContext ? "yes" : "no") +
         " | mediaDevices: " + (navigator.mediaDevices ? "yes" : "no");
       console.log("DIAGNOSTIC -> " + diag);
 
       try {
-        if (MODEL_URL.indexOf("PASTE") === 0) {
-          throw new Error("The model link has not been pasted in yet. Line 196 needs your Teachable Machine link.");
-        }
-        await ensureLibrary();
+        ensureLibrary();
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
           throw new Error("This browser is blocking camera access. Open the site in Chrome, on an https:// address.");
         }
 
         var mj = await fetch(MODEL_URL + "model.json");
         if (!mj.ok) {
-          throw new Error("model.json returned " + mj.status + ". Check the model link is exactly right and ends with a slash.");
+          throw new Error("model.json is missing from the repo (status " + mj.status + ").");
         }
         var mt = await fetch(MODEL_URL + "metadata.json");
         if (!mt.ok) {
-          throw new Error("metadata.json returned " + mt.status + ". The model may not have finished uploading to Teachable Machine.");
+          throw new Error("metadata.json is missing from the repo (status " + mt.status + ").");
         }
         if (!model) {
           model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
